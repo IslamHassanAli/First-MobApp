@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <title>Stock Application</title>  
+
+    <link rel="stylesheet" href="./css/jquery.mobile-1.4.3.css"/>
+    
+    <script type="text/javascript" src="./js/jquery-2.1.1.js"></script>
+    <script type="text/javascript" src="./js/jquery.mobile-1.4.3.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+     <script type="text/javascript" >
+    
+        
+    
+     
+     document.addEventListener("deviceready", onDeviceReady, false);
+             
+            var db;
+             
+            function onDeviceReady() {
+                db = window.openDatabase("Database", "1.0", "Cordova Demo", 2*1024*1024);
+                db.transaction(createDB, errorCB, successCB);
+     
+            }
+         
+            function createDB(tx) {
+                //tx.executeSql('DROP TABLE IF EXISTS DEMO');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (title, image, description)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS User (username, password, createddate)');
+             
+            }
+         
+            function errorCB(err) {
+                alert("Error processing SQL: "+err.code);
+            }
+         
+            function successCB() {
+               alert("YEAH!!!!");
+            }
+                      
+            function insertUserDB(tx) {
+                var _userName = $("[name='txtUserName']").val();
+                var _Password = $("[name='txtPassword']").val();
+                var _createdDate = "tuy";
+                var sql = 'INSERT INTO User (username, password, createddate) VALUES (?,?,?)';
+                tx.executeSql(sql, [_userName,_Password,_createdDate], sucessQueryUserDB, errorCB);
+ 
+            }
+         
+            function sucessQueryUserDB(tx) {     
+               // window.location.href = "index.html";
+            }
+         
+            
+            function submitRegister() {
+                db.transaction(insertUserDB, errorCB);
+              //  $.mobile.changePage( "#page3", { reverse: false, transition: "slide" } );
+                return false;
+            }
+ 
+    
+    </script>
+</head>
+
+<body>
+    <div data-role="page" id="register" data-position="fixed">
+        <div data-role="header" >
+            <h1>Navigation Application</h1>
+        </div><!-- /header -->
+
+        <div data-role="content" >
+           <form method="post" onsubmit="return submitForm()" id="myForm" data-ajax="false">
+                    <lable for="title" class="ui-hidden-accessible">User Name</lable><input type="text" name="txtUserName" placeholder="User Name"><br>
+                    <lable for="image" class="ui-hidden-accessible">Password</lable><input type="password" name="txtPassword" placeholder="Password"><br>
+                                                    
+                    <input type="submit" value="submit">
+                </form>
+           
+        </div><!-- /content -->
+
+        <div data-role="footer" data-id="fool" data-position="fixed" >
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="index.html" >Login</a></li>
+                 </ul>
+            </div><!-- /navbar -->
+        </div><!-- /footer -->
+    </div><!-- /page -->
+</body>
+</html>
